@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { addFav, createUser, getCourses, getFavs, getId, getPasswordByUsername, getUserByUsername } from './crud/crud';
+import { addFav, createUser, getCourses, getFavs, getId, getPasswordByUsername, getUserByUsername ,removeFav} from './crud/crud';
 import * as argon2 from 'argon2'
 import cors from 'cors'
 import * as jwt from 'jsonwebtoken'
@@ -125,3 +125,22 @@ app.post("/favourites",async(req:Request,res:Response)=>{
     console.error(e)
   }
 })
+
+app.post("/removeFav", async (req: Request, res: Response) => {
+  try {
+    const u_id = req.body.u_id;
+    const c_id = req.body.c_id;
+    
+    const isRemoved = await removeFav(u_id, c_id);
+    console.log("Favorite removed:", isRemoved);
+    
+    if (isRemoved) {
+      res.sendStatus(200);
+    } else {
+      res.sendStatus(404); 
+    }
+  } catch (e) {
+    console.error(e);
+    res.sendStatus(500); 
+  }
+});

@@ -50,3 +50,20 @@ export const getFavs=async(u_id:number)=>{
     .select("courses.title","courses.link","courses.id").where("courseFavourites.user_id","=",u_id)
     return faved
 }
+
+export const removeFav = async (u_id: number, c_id: number) => {
+    try {
+      const deleted = await knex("courseFavourites")
+        .where({
+          "user_id": u_id,
+          "course_id": c_id
+        })
+        .del();
+      
+      // If any rows were affected (deleted), return true
+      return deleted > 0;
+    } catch (error) {
+      console.error("Error removing favorite:", error);
+      return false;
+    }
+  }
